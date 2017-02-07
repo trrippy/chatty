@@ -4,6 +4,19 @@ import MessageList from './MessageList.jsx';
 
 var id = 5;
 class App extends Component {
+
+  newMessage (message, username) {
+    const newMessage = {id: id++, username: username, content: message};
+    console.log('newMessage', newMessage);
+    console.log(message);
+    console.log('messages', this.state);
+    const messages = this.state.messages.concat(newMessage)
+    this.ws.send("Here's some text that the server is urgently awaiting!");
+    this.setState({messages: messages})
+
+  }
+
+
   constructor(props){
     super(props);
     this.state = {
@@ -22,6 +35,9 @@ class App extends Component {
       ]
     };
     this.newMessage = this.newMessage.bind(this);
+    console.log(this);
+    // this.ws = this.ws.bind(this); this.ws doesn't exist yet!
+
   }
   componentDidMount() {
     console.log("componentDidMount <App />");
@@ -34,18 +50,15 @@ class App extends Component {
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({messages: messages})
     }, 3000);
+    this.ws = new WebSocket('ws://localhost:4000/');
+    // this.ws.onopen = function (event) {
+    // };
+    this.ws.onmessage = function (event) {
+      console.log(event.data);
+    }
+    console.log(this);
+
   };
-  newMessage (message, username) {
-    const newMessage = {id: id++, username: username, content: message};
-    console.log('newMessage', newMessage);
-    console.log(message);
-    console.log('messages', this.state);
-    const messages = this.state.messages.concat(newMessage)
-
-    this.setState({messages: messages})
-
-  }
-
   render() {
     return (
       <div>
