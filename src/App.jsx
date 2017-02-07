@@ -35,8 +35,8 @@ class App extends Component {
       this.setState({messages: messages})
     }, 3000);
   };
-  newMessage (message) {
-    const newMessage = {id: id++, username: "Michelle", content: message};
+  newMessage (message, username) {
+    const newMessage = {id: id++, username: username, content: message};
     console.log('newMessage', newMessage);
     console.log(message);
     console.log('messages', this.state);
