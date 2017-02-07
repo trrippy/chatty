@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 
-
+var id = 5;
 class App extends Component {
   constructor(props){
     super(props);
@@ -21,6 +21,7 @@ class App extends Component {
         }
       ]
     };
+    this.newMessage = this.newMessage.bind(this);
   }
   componentDidMount() {
     console.log("componentDidMount <App />");
@@ -33,6 +34,16 @@ class App extends Component {
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({messages: messages})
     }, 3000);
+  };
+  newMessage (message) {
+    const newMessage = {id: id++, username: "Michelle", content: message};
+    console.log('newMessage', newMessage);
+    console.log(message);
+    console.log('messages', this.state);
+    const messages = this.state.messages.concat(newMessage)
+
+    this.setState({messages: messages})
+
   }
 
   render() {
@@ -42,7 +53,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages} />
-        <ChatBar />
+        <ChatBar onSend={this.newMessage} />
 
       </div>
     )
