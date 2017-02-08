@@ -2,15 +2,13 @@ import React, {Component} from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 
-let id = 5;
 class App extends Component {
 
   newMessage (message, username) {
-    const newMessage = {id: id++, username: username, content: message};
+    const newMessage = {username: username, content: message};
     const messages = this.state.messages.concat(newMessage)
 
     let msg = {
-      id: id,
       type: "message",
       content: message,
       username: username
