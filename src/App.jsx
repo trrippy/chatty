@@ -16,6 +16,7 @@ class App extends Component {
       username: username
     };
     // Send the msg object as a JSON-formatted string.
+    this.state.currentUser.name = username;
     this.ws.send(JSON.stringify(msg));
 
   }
@@ -53,7 +54,6 @@ class App extends Component {
 
       // TODO do a notification message if the above are different
       if (this.state.currentUser.name !== recievedMsgObj.username) {
-        console.log('hey there');
         let newNotification = {
           type: 'notification',
           message: this.state.currentUser.name + ' has changed username to ' + recievedMsgObj.username
