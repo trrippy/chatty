@@ -16,6 +16,14 @@ class App extends Component {
       username: username
     };
     // Send the msg object as a JSON-formatted string.
+    if (this.state.currentUser.name !== username) {
+        let nNotification = {
+          type: 'notification',
+          message: this.state.currentUser.name + ' has changed username to ' + username
+        };
+        let nNoti = this.state.messages.concat(nNotification);
+        this.setState({messages: nNoti});
+      }
     this.state.currentUser.name = username;
     this.ws.send(JSON.stringify(msg));
 
