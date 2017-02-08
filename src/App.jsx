@@ -2,16 +2,23 @@ import React, {Component} from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 
-var id = 5;
+let id = 5;
 class App extends Component {
 
   newMessage (message, username) {
     const newMessage = {id: id++, username: username, content: message};
-    console.log('newMessage', newMessage);
-    console.log(message);
-    console.log('messages', this.state);
     const messages = this.state.messages.concat(newMessage)
-    this.ws.send("Here's some text that the server is urgently awaiting!");
+
+    let msg = {
+      id: id,
+      type: "message",
+      content: message,
+      username: username
+    };
+
+    // Send the msg object as a JSON-formatted string.
+    this.ws.send(JSON.stringify(msg));
+
     this.setState({messages: messages})
 
   }
@@ -40,16 +47,7 @@ class App extends Component {
 
   }
   componentDidMount() {
-    console.log("componentDidMount <App />");
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-      // Add a new message to the list of messages in the data store
-      const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-      const messages = this.state.messages.concat(newMessage)
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({messages: messages})
-    }, 3000);
+
     this.ws = new WebSocket('ws://localhost:4000/');
     // this.ws.onopen = function (event) {
     // };
