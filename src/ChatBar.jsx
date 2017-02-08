@@ -18,6 +18,9 @@ class ChatBar extends Component {
         this.state.username = 'Anonymous';
       }
       this.props.onSend(this.state.message, this.state.username);
+      console.log(this.className);
+      event.target.value = '';
+      ;
     }
   }
   handleUsername(event) {
@@ -35,7 +38,8 @@ class ChatBar extends Component {
         <input
           className="chatbar-message"
           placeholder="Type a message and hit ENTER"
-          onKeyPress={this.handleChange} />
+          onKeyPress={this.handleChange}
+          value={this.state.usermessage}/>
       </footer>
     )
   }
