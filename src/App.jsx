@@ -4,11 +4,12 @@ import MessageList from './MessageList.jsx';
 
 class App extends Component {
 
-  newMessage (message, username) {
+  newMessage (message, username, id) {
     const newMessage = {username: username, content: message};
     const messages = this.state.messages.concat(newMessage)
 
     let msg = {
+      id: id,
       type: "message",
       content: message,
       username: username
@@ -17,8 +18,6 @@ class App extends Component {
     // Send the msg object as a JSON-formatted string.
     this.ws.send(JSON.stringify(msg));
 
-    this.setState({messages: messages})
-
   }
 
 
@@ -26,33 +25,24 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id: 1,
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-        },
-        {
-          id: 2,
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }
-      ]
+      messages: []
     };
     this.newMessage = this.newMessage.bind(this);
-    console.log(this);
+
     // this.ws = this.ws.bind(this); this.ws doesn't exist yet!
 
   }
   componentDidMount() {
 
     this.ws = new WebSocket('ws://localhost:4000/');
-    // this.ws.onopen = function (event) {
-    // };
-    this.ws.onmessage = function (event) {
-      console.log(event.data);
+
+    // This handles a new message from server
+    this.ws.onmessage = (event) => {
+      let recievedMsgObj = JSON.parse(event.data);
+
+      let rMessages = this.state.messages.concat(recievedMsgObj);
+      this.setState({messages: rMessages});
     }
-    console.log(this);
 
   };
   render() {
