@@ -18,7 +18,6 @@ class ChatBar extends Component {
         this.state.username = 'Anonymous';
       }
       this.props.onSend(this.state.message, this.state.username);
-      console.log(this.className);
       event.target.value = '';
       ;
     }
