@@ -9,7 +9,8 @@ class App extends Component {
     let msg = {
       type: "message",
       content: message,
-      username: this.state.currentUser.name
+      username: this.state.currentUser.name,
+      messageColor: this.state.currentUser.color
     };
 
     this.ws.send(JSON.stringify(msg));
@@ -38,7 +39,7 @@ class App extends Component {
         color: 'black'
       },
       messages: [],
-      userCount: 0
+      userCount: 0,
     };
 
     this.newMessage = this.newMessage.bind(this);
@@ -85,8 +86,7 @@ class App extends Component {
         </nav>
         <MessageList
         messages={this.state.messages}
-        username={this.state.currentUser.name}
-        userColor={this.state.currentUser.color} />
+        username={this.state.currentUser.name} />
         <ChatBar
         onSend={this.newMessage}
         username={this.state.currentUser.name}
