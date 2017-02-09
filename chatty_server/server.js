@@ -27,15 +27,38 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
+wss.broadcastUserCount = function broadcast() {
+  wss.clients.forEach((client) => {
+    let userCount = {
+      type: 'clientCount',
+      count: wss.clients.size
+      // give it a color
+    }
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(userCount));
+      ;
+    }
+  });
+};
+
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  wss.broadcastUserCount();
+
+
   ws.on('message', function incoming(message) {
+    // Handle Message
     let messageObj = JSON.parse(message);
     messageObj.id = uuid.v4();
     wss.broadcast(JSON.stringify(messageObj));
+
+    // Increase Count
   });
 
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    wss.broadcastUserCount();
+  } )
 });
