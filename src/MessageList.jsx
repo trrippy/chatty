@@ -26,7 +26,7 @@ class MessageList extends Component {
               username={item.username}
               content={item.content}
               key={item.id}
-              userColor={this.props.userColor} />
+              messageColor={item.messageColor} />
             )
           }
         })}
