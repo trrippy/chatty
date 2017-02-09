@@ -26,9 +26,7 @@ class App extends Component {
 
         this.ws.send(JSON.stringify(nNotification));
         this.state.currentUser.name = username;
-
       }
-
   }
 
 
@@ -36,7 +34,8 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: "Anonymous"},
-      messages: []
+      messages: [],
+      userCount: 0
     };
 
     this.newMessage = this.newMessage.bind(this);
@@ -50,10 +49,20 @@ class App extends Component {
 
     // This handles a new message from server
     this.ws.onmessage = (event) => {
-      let recievedMsgObj = JSON.parse(event.data);
 
-      let rMessages = this.state.messages.concat(recievedMsgObj);
-      this.setState({messages: rMessages});
+      let recievedMsgObj = JSON.parse(event.data);
+      console.log('recievedMsgObj', recievedMsgObj);
+
+      // handle usercount
+      if (recievedMsgObj.type === 'clientCount') {
+        console.log('recievedMsgObj.count', recievedMsgObj.count);
+        this.setState({userCount: recievedMsgObj.count})
+      } else {
+
+        // Handles messages
+        let rMessages = this.state.messages.concat(recievedMsgObj);
+        this.setState({messages: rMessages});
+      }
     }
   };
 
@@ -62,6 +71,9 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <span className='usercount'>
+            {this.state.userCount} users online
+          </span>
         </nav>
         <MessageList
         messages={this.state.messages}
