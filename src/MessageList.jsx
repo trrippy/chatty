@@ -4,12 +4,11 @@ import Message from './Message.jsx';
 
 class MessageList extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       currentUser: {name: 'Anonymous'},
     };
-
   }
 
 
@@ -26,7 +25,8 @@ class MessageList extends Component {
               <Message
               username={item.username}
               content={item.content}
-              key={item.id} />
+              key={item.id}
+              userColor={this.props.userColor} />
             )
           }
         })}

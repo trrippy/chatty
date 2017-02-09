@@ -33,7 +33,10 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      currentUser: {name: "Anonymous"},
+      currentUser: {
+        name: "Anonymous",
+        color: 'black'
+      },
       messages: [],
       userCount: 0
     };
@@ -55,8 +58,13 @@ class App extends Component {
 
       // handle usercount
       if (recievedMsgObj.type === 'clientCount') {
-        console.log('recievedMsgObj.count', recievedMsgObj.count);
+        // console.log('recievedMsgObj.count', recievedMsgObj.count);
         this.setState({userCount: recievedMsgObj.count})
+
+        // handle usercolor
+        if (this.state.currentUser.color === 'black') {
+          this.state.currentUser.color = recievedMsgObj.color;
+        }
       } else {
 
         // Handles messages
@@ -77,7 +85,8 @@ class App extends Component {
         </nav>
         <MessageList
         messages={this.state.messages}
-        username={this.state.currentUser.name} />
+        username={this.state.currentUser.name}
+        userColor={this.state.currentUser.color} />
         <ChatBar
         onSend={this.newMessage}
         username={this.state.currentUser.name}
