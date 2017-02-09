@@ -16,9 +16,9 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
-// Set up a callback that will run when a client connects to the server
-// When a client connects they are assigned a socket, represented by
-// the ws parameter in the callback.
+const colors = ['#FF0000', '#808000', '#FFFF00', '#00FFFF', '#008080', '#FF00FF']
+
+
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
@@ -29,9 +29,12 @@ wss.broadcast = function broadcast(data) {
 
 wss.broadcastUserCount = function broadcast() {
   wss.clients.forEach((client) => {
+    let color = colors[Math.floor(Math.random()*colors.length)];
+    console.log(color);
     let userCount = {
       type: 'clientCount',
-      count: wss.clients.size
+      count: wss.clients.size,
+      color: color
       // give it a color
     }
     if (client.readyState === WebSocket.OPEN) {
@@ -40,6 +43,7 @@ wss.broadcastUserCount = function broadcast() {
     }
   });
 };
+
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
