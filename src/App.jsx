@@ -4,48 +4,44 @@ import MessageList from './MessageList.jsx';
 
 class App extends Component {
 
-  newMessage (message, username, id) {
-    const newMessage = {username: username, content: message};
-    const messages = this.state.messages.concat(newMessage)
-    console.log('in newMessage',messages)
+  newMessage (message) {
 
     let msg = {
-      id: id,
       type: "message",
       content: message,
-      username: username
+      username: this.state.currentUser.name
     };
-    // Send the msg object as a JSON-formatted string.
+
+    this.ws.send(JSON.stringify(msg));
+
+  }
+
+  newUser(username) {
+
     if (this.state.currentUser.name !== username) {
         let nNotification = {
           type: 'notification',
           message: this.state.currentUser.name + ' has changed username to ' + username
         };
-        let nNoti = this.state.messages.concat(nNotification);
-        this.setState({messages: nNoti});
+
+        this.ws.send(JSON.stringify(nNotification));
+        this.state.currentUser.name = username;
+
       }
-    this.state.currentUser.name = username;
-    this.ws.send(JSON.stringify(msg));
 
   }
-
-
-
-  // newNotification (message) {
-  //   let newNot = {content}
-  // }
 
 
   constructor(props){
     super(props);
     this.state = {
-      currentUser: {name: "Anonymous"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: "Anonymous"},
       messages: []
     };
 
     this.newMessage = this.newMessage.bind(this);
+    this.newUser = this.newUser.bind(this);
 
-    // this.ws = this.ws.bind(this); this.ws doesn't exist yet!
 
   }
   componentDidMount() {
@@ -55,22 +51,6 @@ class App extends Component {
     // This handles a new message from server
     this.ws.onmessage = (event) => {
       let recievedMsgObj = JSON.parse(event.data);
-
-      console.log('currentUser', this.state.currentUser.name)
-      console.log('newusername', recievedMsgObj.username);
-
-
-      // TODO do a notification message if the above are different
-      if (this.state.currentUser.name !== recievedMsgObj.username) {
-        let newNotification = {
-          type: 'notification',
-          message: this.state.currentUser.name + ' has changed username to ' + recievedMsgObj.username
-        };
-        let newNoti = this.state.messages.concat(newNotification);
-        this.setState({messages: newNoti});
-      }
-      // TODO set the state.currrentUser.name to the new one
-      this.state.currentUser.name = recievedMsgObj.username;
 
       let rMessages = this.state.messages.concat(recievedMsgObj);
       this.setState({messages: rMessages});
@@ -86,7 +66,10 @@ class App extends Component {
         <MessageList
         messages={this.state.messages}
         username={this.state.currentUser.name} />
-        <ChatBar onSend={this.newMessage} />
+        <ChatBar
+        onSend={this.newMessage}
+        username={this.state.currentUser.name}
+        onSendUser={this.newUser} />
 
       </div>
     )
